@@ -37,6 +37,5 @@ public class ClickGuiScreen extends Screen {
         if(vertical<0)offset=Math.min(max,offset+1); else if(vertical>0)offset=Math.max(0,offset-1);
         clearAndInit(); return true;
     }
-    private void clearChildren(){children().clear();}
     @Override public boolean shouldPause(){return false;}
 }
