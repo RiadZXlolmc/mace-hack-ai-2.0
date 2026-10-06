@@ -8,7 +8,7 @@ public class FastPlace extends Module {
     public final IntSetting delay = new IntSetting("Tick delay", 0, 0, 5, 1);
 
     public FastPlace() {
-        super("FastPlace", "Reduces the item placement cooldown", true);
+        super("FastPlace", "Reduces the item placement cooldown");
         settings.add(delay);
     }
 
