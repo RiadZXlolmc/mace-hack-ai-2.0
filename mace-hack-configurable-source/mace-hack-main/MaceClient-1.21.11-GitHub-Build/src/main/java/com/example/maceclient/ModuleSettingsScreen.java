@@ -23,18 +23,23 @@ public class ModuleSettingsScreen extends Screen {
         super.render(d,mx,my,delta);
         d.drawCenteredTextWithShadow(textRenderer,Text.literal(module.name+" SETTINGS"),width/2,20,0xFFFFFF);
         d.drawCenteredTextWithShadow(textRenderer,Text.literal("Click a setting to cycle its value"),width/2,36,0xAAAAAA);
-    }
-    @Override public boolean mouseClicked(double mx,double my,int button){
-        int y=55;
-        for(Setting s:module.getSettings()){
-            if(mx>=width/2-150&&mx<=width/2+150&&my>=y&&my<=y+24){
-                s.cycle(); clearAndInit(); return true;
-            }
-            y+=32;
+    }@Override
+public boolean mouseClicked(net.minecraft.client.gui.Click click, boolean doubled) {
+    double mx = click.x();
+    double my = click.y();
+
+    int y = 55;
+    for (Setting s : module.getSettings()) {
+        if (mx >= width / 2 - 150 && mx <= width / 2 + 150 && my >= y && my <= y + 24) {
+            s.cycle();
+            clearAndInit();
+            return true;
         }
-        return super.mouseClicked(mx,my,button);
+        y += 32;
     }
-    private void clearAndInit(){clearChildren();init();}
+
+    return super.mouseClicked(click, doubled);
+}
     @Override public void close(){if(client!=null)client.setScreen(new ClickGuiScreen());}
     @Override public boolean shouldPause(){return false;}
 }
