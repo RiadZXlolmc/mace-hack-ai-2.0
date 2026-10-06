@@ -6,7 +6,15 @@
   "description": "Modular Fabric client with a click GUI.",
   "authors": ["OpenAI"],
   "environment": "client",
-  "entrypoints": { "client": ["com.example.maceclient.MaceClient"] },
+  "entrypoints": {
+    "client": ["com.example.maceclient.MaceClient"]
+  },
+  "mixins": [
+    {
+      "config": "maceclient.client.mixins.json",
+      "environment": "client"
+    }
+  ],
   "depends": {
     "fabricloader": ">=0.18.1",
     "minecraft": "1.21.11",
