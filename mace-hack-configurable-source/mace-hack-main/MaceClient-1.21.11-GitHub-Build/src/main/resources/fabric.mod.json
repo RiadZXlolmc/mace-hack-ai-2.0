@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "id": "maceclient",
+  "version": "${version}",
+  "name": "Mace Client",
+  "description": "Modular Fabric client with a click GUI.",
+  "authors": ["OpenAI"],
+  "environment": "client",
+  "entrypoints": { "client": ["com.example.maceclient.MaceClient"] },
+  "depends": {
+    "fabricloader": ">=0.18.1",
+    "minecraft": "1.21.11",
+    "fabric-api": "*"
+  }
+}
