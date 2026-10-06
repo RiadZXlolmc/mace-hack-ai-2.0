@@ -35,7 +35,7 @@ public class ClickGuiScreen extends Screen {
     @Override public boolean mouseScrolled(double mx,double my,double horizontal,double vertical){
         int max=Math.max(0,MaceClient.MODULES.modules.size()-8);
         if(vertical<0)offset=Math.min(max,offset+1); else if(vertical>0)offset=Math.max(0,offset-1);
-        clearChildren();init(); return true;
+        clearAndInit(); return true;
     }
     private void clearChildren(){children().clear();}
     @Override public boolean shouldPause(){return false;}
