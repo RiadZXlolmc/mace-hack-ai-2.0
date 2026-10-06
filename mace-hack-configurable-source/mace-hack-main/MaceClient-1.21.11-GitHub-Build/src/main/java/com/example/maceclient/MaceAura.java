@@ -23,7 +23,7 @@ public class MaceAura extends Module {
             if(d<bestD){best=living;bestD=d;}
         }
         if(best!=null){
-            float old=c.player.fallDistance;
+            double old=c.player.fallDistance;
             c.player.fallDistance=virtualFall.value>Float.MAX_VALUE?Float.MAX_VALUE:(float)virtualFall.value;
             c.interactionManager.attackEntity(c.player,best);
             c.player.fallDistance=old;
