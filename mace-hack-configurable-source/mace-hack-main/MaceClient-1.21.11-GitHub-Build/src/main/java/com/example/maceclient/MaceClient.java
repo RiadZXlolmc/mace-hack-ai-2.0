@@ -10,21 +10,43 @@ import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
 
 public class MaceClient implements ClientModInitializer {
+
     public static final ModuleManager MODULES = new ModuleManager();
     private static KeyBinding guiKey;
 
-    @Override public void onInitializeClient() {
+    @Override
+    public void onInitializeClient() {
+
+        TrackerRenderer.init();
+
         guiKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "key.maceclient.gui", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_RIGHT_SHIFT,
-                KeyBinding.Category.MISC));
+                "key.maceclient.gui",
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_RIGHT_SHIFT,
+                KeyBinding.Category.MISC
+        ));
+
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            while (guiKey.wasPressed()) client.setScreen(new ClickGuiScreen());
+            while (guiKey.wasPressed()) {
+                client.setScreen(new ClickGuiScreen());
+            }
+
             MODULES.tick(client);
         });
     }
 
+    public static ModuleManager getModuleManager() {
+        return MODULES;
+    }
+
     public static void msg(String s) {
-        MinecraftClient c=MinecraftClient.getInstance();
-        if(c.player!=null) c.player.sendMessage(Text.literal("§7[Mace] §f"+s), true);
+        MinecraftClient c = MinecraftClient.getInstance();
+
+        if (c.player != null) {
+            c.player.sendMessage(
+                    Text.literal("§7[Mace] §f" + s),
+                    true
+            );
+        }
     }
 }
