@@ -1,9 +1,10 @@
 package com.example.maceclient;
 
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
+import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.Vec3d;
@@ -28,21 +29,37 @@ public final class TrackerRenderer {
             }
 
             MatrixStack matrices = context.matrixStack();
-            Vec3d camera = context.camera().getPos();
+
+            if (matrices == null) {
+                return;
+            }
+
+            VertexConsumerProvider consumers = context.consumers();
+
+            if (consumers == null) {
+                return;
+            }
 
             VertexConsumer vertices =
-                    context.consumers().getBuffer(RenderLayer.getLines());
+                    consumers.getBuffer(RenderLayer.getLines());
+
+            Vec3d camera = context.camera().getPos();
 
             matrices.push();
             matrices.translate(-camera.x, -camera.y, -camera.z);
+
+            Vec3d start = client.player.getCameraPosVec(1.0f);
 
             for (PlayerEntity player : client.world.getPlayers()) {
                 if (player == client.player) {
                     continue;
                 }
 
-                Vec3d start = client.player.getCameraPosVec(1.0f);
-                Vec3d end = player.getPos().add(0.0, player.getHeight() * 0.5, 0.0);
+                Vec3d end = new Vec3d(
+                        player.getX(),
+                        player.getY() + player.getHeight() * 0.5,
+                        player.getZ()
+                );
 
                 vertices.vertex(
                         matrices.peek().getPositionMatrix(),
