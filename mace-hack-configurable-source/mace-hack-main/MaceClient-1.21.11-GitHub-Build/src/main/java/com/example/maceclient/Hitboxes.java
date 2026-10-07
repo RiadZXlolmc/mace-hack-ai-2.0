@@ -7,29 +7,24 @@ import net.minecraft.util.math.Box;
 
 public class Hitboxes extends Module {
 
-    public static double activeExpand = 0.0;
-
     public final DoubleSetting expand =
             new DoubleSetting("Expand", 0.20, 0.0, 1.0, 0.05);
 
     public Hitboxes() {
-        super("Hitboxes", "Expands player hitboxes");
+        super("Hitboxes", "Expands player target boxes");
         settings.add(expand);
     }
 
     @Override
     public void onEnable(MinecraftClient c) {
-        activeExpand = expand.value;
     }
 
     @Override
     public void onDisable(MinecraftClient c) {
-        activeExpand = 0.0;
     }
 
     @Override
     public void tick(MinecraftClient c) {
-        activeExpand = expand.value;
     }
 
     public Entity findTarget(MinecraftClient c, double range) {
@@ -38,47 +33,29 @@ public class Hitboxes extends Module {
         }
 
         Entity best = null;
-        double bestD = range * range;
+        double bestDistance = range * range;
 
-        Box box = c.player.getBoundingBox().expand(range);
+        Box searchBox = c.player.getBoundingBox().expand(range);
 
-        for (Entity e : c.world.getOtherEntities(c.player, box)) {
-            if (!e.isAttackable()) {
+        for (Entity entity : c.world.getOtherEntities(c.player, searchBox)) {
+
+            if (!(entity instanceof PlayerEntity)) {
                 continue;
             }
 
-            double d = c.player.squaredDistanceTo(e);
+            double distance = c.player.squaredDistanceTo(entity);
 
-            if (d < bestD) {
-                best = e;
-                bestD = d;
+            if (distance < bestDistance) {
+                best = entity;
+                bestDistance = distance;
             }
         }
 
         return best;
     }
 
-    public static boolean isActive() {
-        return activeExpand > 0.0;
-    }
-
-    public static Box expandBox(Entity entity, Box original) {
-        if (!isActive()) {
-            return original;
-        }
-
-        if (!(entity instanceof PlayerEntity)) {
-            return original;
-        }
-
-        MinecraftClient client = MinecraftClient.getInstance();
-
-        if (client.player == null || entity == client.player) {
-            return original;
-        }
-
-        double amount = activeExpand;
-
-        return original.expand(amount, amount, amount);
+    public Box getExpandedTargetBox(PlayerEntity target) {
+        double amount = expand.value;
+        return target.getBoundingBox().expand(amount, amount, amount);
     }
 }
