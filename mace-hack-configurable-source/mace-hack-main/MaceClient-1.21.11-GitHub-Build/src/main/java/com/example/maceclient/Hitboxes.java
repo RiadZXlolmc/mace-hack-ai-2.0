@@ -7,6 +7,8 @@ import net.minecraft.util.math.Box;
 
 public class Hitboxes extends Module {
 
+    public static double activeExpand = 0.0;
+
     public final DoubleSetting expand =
             new DoubleSetting("Expand", 0.20, 0.0, 1.0, 0.05);
 
@@ -17,14 +19,26 @@ public class Hitboxes extends Module {
 
     @Override
     public void onEnable(MinecraftClient c) {
+        activeExpand = expand.value;
     }
 
     @Override
     public void onDisable(MinecraftClient c) {
+        activeExpand = 0.0;
     }
 
     @Override
     public void tick(MinecraftClient c) {
+        activeExpand = expand.value;
+    }
+
+    public static boolean isActive() {
+        return activeExpand > 0.0;
+    }
+
+    public static Box getExpandedTargetBox(PlayerEntity target) {
+        double amount = activeExpand;
+        return target.getBoundingBox().expand(amount, amount, amount);
     }
 
     public Entity findTarget(MinecraftClient c, double range) {
@@ -38,7 +52,6 @@ public class Hitboxes extends Module {
         Box searchBox = c.player.getBoundingBox().expand(range);
 
         for (Entity entity : c.world.getOtherEntities(c.player, searchBox)) {
-
             if (!(entity instanceof PlayerEntity)) {
                 continue;
             }
@@ -52,10 +65,5 @@ public class Hitboxes extends Module {
         }
 
         return best;
-    }
-
-    public Box getExpandedTargetBox(PlayerEntity target) {
-        double amount = expand.value;
-        return target.getBoundingBox().expand(amount, amount, amount);
     }
 }
